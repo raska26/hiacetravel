@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HiaceTravel — Manajemen Travel</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="brand-icon">🚐</div><div><strong>HiaceTravel</strong><small>TRAVEL MANAGEMENT SYSTEM</small></div></div>
+  <div class="nav-label">MENU UTAMA</div>
+  <nav class="nav" id="nav">
+    <button class="active" data-view="dashboard"><span class="ico">▦</span>Dashboard</button>
+    <button data-view="bookings"><span class="ico">▣</span>Pemesanan</button>
+    <button data-view="schedules"><span class="ico">◷</span>Jadwal & Kendaraan</button>
+    <button data-view="passengers"><span class="ico">♙</span>Data Penumpang</button>
+    <button data-view="finance"><span class="ico">↗</span>Keuangan</button>
+    <button data-view="reports"><span class="ico">▤</span>Laporan</button>
+  </nav>
+  <div class="nav-label">PREFERENSI</div>
+  <nav class="nav"><button data-view="settings"><span class="ico">⚙</span>Pengaturan</button></nav>
+  <div class="side-foot">● Sistem Demo<br>Rute Kotabumi ↔ Tanjung Karang<br><span style="color:#718aa2">© 2026 HiaceTravel</span></div>
+</aside>
+<main class="main">
+  <header class="topbar"><div class="crumb">HiaceTravel / <strong id="crumb">Dashboard</strong></div><div class="profile"><div class="avatar">AD</div><div><strong>Administrator</strong><small>Admin Travel</small></div></div></header>
+  <div class="content">
+    <section class="view active" id="dashboard">
+      <div class="heading"><div><h1>Dashboard</h1><p>Ringkasan operasional travel Anda hari ini.</p></div><button class="btn primary" onclick="openBooking()">＋ Tambah Pemesanan</button></div>
+      <div class="stats">
+        <div class="stat"><div class="stat-top">Total Pemesanan <span class="stat-icon">▣</span></div><strong id="statBookings">24</strong><small><span class="green">●</span> Semua jenis layanan</small></div>
+        <div class="stat"><div class="stat-top">Penumpang Hari Ini <span class="stat-icon">♙</span></div><strong id="statPassengers">18</strong><small>Reguler dan carter</small></div>
+        <div class="stat"><div class="stat-top">Pemasukan <span class="stat-icon">↗</span></div><strong id="statRevenue">Rp 3,2 jt</strong><small class="green">Pembayaran tercatat</small></div>
+        <div class="stat"><div class="stat-top">Biaya Operasional <span class="stat-icon">↘</span></div><strong id="statCosts">Rp 850 rb</strong><small>Termasuk uang jalan</small></div>
+      </div>
+      <div class="two-col">
+        <div class="panel"><div class="panel-head"><div><h2>Jadwal Keberangkatan</h2><p>Jadwal perjalanan terdekat</p></div><button class="btn" onclick="showView('schedules')">Lihat semua</button></div>
+          <div class="table-wrap"><table><thead><tr><th>Rute</th><th>Waktu</th><th>Terisi</th><th>Status</th></tr></thead><tbody id="schedulePreview"></tbody></table></div></div>
+        <div class="panel"><div class="panel-head"><div><h2>Aktivitas Terbaru</h2><p>Pembaruan pada sistem</p></div></div><div class="panel-body"><div class="activity" id="activityList"></div></div></div>
+      </div>
+      <div class="panel"><div class="panel-head"><div><h2>Ringkasan Ketersediaan Kursi</h2><p>Contoh kapasitas kendaraan untuk jadwal hari ini</p></div><span class="pill blue">Kapasitas Hiace: 14 kursi</span></div><div class="panel-body" id="routeCards"></div></div>
+    </section>
+    <section class="view" id="bookings">
+      <div class="heading"><div><h1>Pemesanan</h1><p>Kelola pemesanan reguler dan carter pelanggan.</p></div><button class="btn primary" onclick="openBooking()">＋ Tambah Pemesanan</button></div>
+      <div class="panel"><div class="panel-head"><h2>Daftar Pemesanan</h2><div class="toolbar"><input class="search" id="bookingSearch" placeholder="Cari nama / kode pemesanan..." oninput="renderBookings()"/><select class="search" id="bookingType" onchange="renderBookings()"><option value="">Semua layanan</option><option>Reguler</option><option>Carter</option></select></div></div><div class="table-wrap"><table><thead><tr><th>Kode</th><th>Pelanggan</th><th>Jenis</th><th>Rute</th><th>Tanggal</th><th>Total</th><th>Pembayaran</th></tr></thead><tbody id="bookingRows"></tbody></table></div></div>
+      <p class="footnote">Data contoh dan pemesanan yang Anda tambahkan tersimpan di browser ini (localStorage).</p>
+    </section>
+    <section class="view" id="schedules">
+      <div class="heading"><div><h1>Jadwal & Kendaraan</h1><p>Jadwal perjalanan untuk dua arah rute utama.</p></div><button class="btn primary" onclick="toast('Form tambah jadwal dapat dihubungkan pada tahap backend.')">＋ Tambah Jadwal</button></div>
+      <div class="panel"><div class="panel-head"><h2>Jadwal Keberangkatan</h2><span class="pill blue">Kapasitas standar 14 kursi</span></div><div class="table-wrap"><table><thead><tr><th>Rute</th><th>Tanggal</th><th>Jam</th><th>Kendaraan</th><th>Kursi Terisi</th><th>Status</th></tr></thead><tbody id="allSchedules"></tbody></table></div></div>
+      <div class="panel"><div class="panel-head"><h2>Informasi Kendaraan</h2></div><div class="panel-body"><div class="route-card"><div class="route-line"><strong>Hiace — Armada 01</strong><span>14 kursi</span></div><p class="sub">Kendaraan contoh · Rute reguler dan carter</p></div><div class="route-card"><div class="route-line"><strong>Hiace — Armada 02</strong><span>14 kursi</span></div><p class="sub">Kendaraan contoh · Rute reguler dan carter</p></div><p class="footnote">Silakan sesuaikan data kendaraan dengan armada mitra sebenarnya.</p></div></div>
+    </section>
+    <section class="view" id="passengers">
+      <div class="heading"><div><h1>Data Penumpang</h1><p>Data penumpang berasal dari pencatatan pemesanan.</p></div></div>
+      <div class="panel"><div class="panel-head"><h2>Daftar Penumpang</h2><input class="search" id="passengerSearch" placeholder="Cari nama penumpang..." oninput="renderPassengers()"/></div><div class="table-wrap"><table><thead><tr><th>Nama</th><th>No. Telepon</th><th>Jenis Layanan</th><th>Rute</th><th>Tanggal</th><th>Kursi / Catatan</th></tr></thead><tbody id="passengerRows"></tbody></table></div></div>
+    </section>
+    <section class="view" id="finance">
+      <div class="heading"><div><h1>Keuangan</h1><p>Pantau pemasukan pembayaran dan biaya operasional.</p></div><button class="btn primary" onclick="openCost()">＋ Catat Biaya</button></div>
+      <div class="stats"><div class="stat"><div class="stat-top">Total Pemasukan <span class="stat-icon">↗</span></div><strong id="financeRevenue">Rp 3.200.000</strong><small>Dari data pembayaran</small></div><div class="stat"><div class="stat-top">Total Pengeluaran <span class="stat-icon">↘</span></div><strong id="financeCosts">Rp 850.000</strong><small>Termasuk uang jalan</small></div><div class="stat"><div class="stat-top">Estimasi Selisih <span class="stat-icon">＝</span></div><strong id="financeNet">Rp 2.350.000</strong><small>Sebelum biaya lainnya</small></div></div>
+      <div class="panel"><div class="panel-head"><h2>Catatan Pengeluaran</h2></div><div class="table-wrap"><table><thead><tr><th>Tanggal</th><th>Kategori</th><th>Keterangan</th><th>Jumlah</th></tr></thead><tbody id="costRows"></tbody></table></div></div>
+      <div class="notice">Angka yang ditampilkan adalah data demonstrasi, bukan laporan keuangan riil. Pastikan data transaksi diverifikasi sebelum digunakan.</div>
+    </section>
+    <section class="view" id="reports">
+      <div class="heading"><div><h1>Laporan</h1><p>Rekap operasional dan keuangan travel.</p></div><button class="btn primary" onclick="window.print()">⤓ Cetak / Simpan PDF</button></div>
+      <div class="stats"><div class="stat"><div class="stat-top">Total Pemesanan</div><strong id="reportBookings">24</strong><small>Seluruh layanan</small></div><div class="stat"><div class="stat-top">Total Penumpang</div><strong id="reportPassengers">18</strong><small>Terdata</small></div><div class="stat"><div class="stat-top">Pemasukan</div><strong id="reportRevenue">Rp 3,2 jt</strong><small>Pembayaran</small></div><div class="stat"><div class="stat-top">Pengeluaran</div><strong id="reportCosts">Rp 850 rb</strong><small>Operasional</small></div></div>
+      <div class="panel"><div class="panel-head"><h2>Rekap Pemesanan</h2><button class="btn" onclick="downloadCSV()">Ekspor CSV</button></div><div class="table-wrap"><table><thead><tr><th>Kode</th><th>Pelanggan</th><th>Jenis</th><th>Rute</th><th>Tanggal</th><th>Total</th><th>Status</th></tr></thead><tbody id="reportRows"></tbody></table></div></div>
+    </section>
+    <section class="view" id="settings">
+      <div class="heading"><div><h1>Pengaturan</h1><p>Informasi dasar sistem demo.</p></div></div>
+      <div class="panel"><div class="panel-head"><h2>Profil Usaha</h2></div><div class="panel-body"><div class="form-grid"><div class="field"><label>Nama Usaha</label><input value="HiaceTravel"/></div><div class="field"><label>Jenis Kendaraan</label><input value="Toyota Hiace"/></div><div class="field"><label>Rute Utama</label><input value="Kotabumi – Tanjung Karang"/></div><div class="field"><label>Kapasitas Kursi</label><input value="14 kursi"/></div></div><div class="notice">Ini adalah prototipe front-end. Login, sinkronisasi multi-admin, database, dan pengelolaan jadwal secara penuh memerlukan backend dan database.</div></div></div>
+    </section>
+  </div>
+</main>
+</div>
+<div class="toast" id="toast"></div>
+<div id="modalRoot"></div>
+<script src="js/script.js"></script>
+</body>
+</html>
